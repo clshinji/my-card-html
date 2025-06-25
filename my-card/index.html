@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Page</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary: #0066ff;
+        --secondary: #00a8ff;
+        --accent: #ff0066;
+        --dark: #1a1a1a;
+        --light: #ffffff;
+        --gray: #666;
+        --light-gray: #f8f9fa;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --gradient: linear-gradient(135deg, #0066ff, #00a8ff);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: var(--light);
+        color: var(--dark);
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Animated Background Pattern */
+      .bg-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.03;
+        background-image: radial-gradient(
+          circle at 1px 1px,
+          var(--primary) 1px,
+          transparent 1px
+        );
+        background-size: 50px 50px;
+        animation: drift 20s linear infinite;
+      }
+
+      @keyframes drift {
+        from {
+          transform: translate(0, 0);
+        }
+        to {
+          transform: translate(50px, 50px);
+        }
+      }
+
+      /* Gradient Orbs */
+      .gradient-orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.3;
+        animation: float 20s ease-in-out infinite;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .orb1 {
+        width: 400px;
+        height: 400px;
+        background: var(--primary);
+        top: -200px;
+        right: -200px;
+      }
+
+      .orb2 {
+        width: 300px;
+        height: 300px;
+        background: var(--secondary);
+        bottom: -150px;
+        left: -150px;
+        animation-delay: -5s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(30px, -30px) scale(1.1);
+        }
+        66% {
+          transform: translate(-20px, 20px) scale(0.9);
+        }
+      }
+
+      /* Container */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Header Section */
+      .header {
+        text-align: center;
+        padding: 60px 0 30px;
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .profile-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 30px;
+      }
+
+      .profile-pic {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: var(--gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0, 102, 255, 0.3);
+        animation: profilePulse 3s ease-in-out infinite;
+        overflow: hidden;
+      }
+
+      .profile-pic img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      @keyframes profilePulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .profile-pic::after {
+        content: "";
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: var(--gradient);
+        z-index: -1;
+        opacity: 0.2;
+        filter: blur(20px);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--dark);
+        line-height: 1.2;
+      }
+
+      .tagline {
+        font-size: 1.1rem;
+        color: var(--primary);
+        margin-bottom: 25px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+
+      .bio {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: var(--gray);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .bio-highlight {
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      /* My Card Section */
+      .my-card-section {
+        margin: 50px 0;
+        animation: fadeIn 0.8s ease-out 0.2s both;
+      }
+
+      .my-card-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px var(--shadow);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .my-card-wrapper:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 102, 255, 0.2);
+      }
+
+      .my-card-image {
+        width: 100%;
+        display: block;
+      }
+
+      .copy-text-wrapper {
+        max-width: 600px;
+        margin: 25px auto 0;
+        position: relative;
+      }
+
+      .copy-text {
+        background: var(--light-gray);
+        border: 2px solid transparent;
+        border-radius: 20px;
+        padding: 24px;
+        font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        font-size: 0.9rem;
+        color: var(--gray);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.6;
+      }
+
+      .copy-button {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: var(--primary);
+        color: var(--light);
+        border: none;
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      .copy-text-wrapper:hover .copy-button {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .copy-button:hover {
+        background: var(--secondary);
+        transform: scale(1.05);
+      }
+
+      .copy-button:active {
+        transform: scale(0.95);
+      }
+
+      .copy-button.copied {
+        background: #28a745;
+      }
+
+      /* Links Section */
+      .links-section {
+        margin: 30px 0 50px;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 25px;
+        color: var(--dark);
+        font-weight: 600;
+        position: relative;
+        animation: fadeIn 0.8s ease-out 0.2s both;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--gradient);
+        border-radius: 2px;
+      }
+
+      .links-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .link-card {
+        background: var(--light);
+        border: 2px solid var(--light-gray);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: slideUp 0.6s ease-out;
+        animation-fill-mode: both;
+        box-shadow: 0 2px 10px var(--shadow);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .link-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .link-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .link-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .link-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .link-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        border-color: var(--primary);
+        box-shadow: 0 15px 40px rgba(0, 102, 255, 0.2);
+      }
+
+      .link-card a {
+        display: flex;
+        align-items: center;
+        padding: 20px 24px;
+        text-decoration: none;
+        color: var(--dark);
+        gap: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .link-card a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 102, 255, 0.05),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .link-card:hover a::before {
+        left: 100%;
+      }
+
+      .link-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--light-gray);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+      }
+
+      .link-card:hover .link-icon {
+        background: var(--gradient);
+        transform: rotate(5deg);
+      }
+
+      .link-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--primary);
+        transition: stroke 0.3s ease;
+      }
+
+      .link-card:hover .link-icon svg {
+        stroke: var(--light);
+      }
+
+      .link-content {
+        flex: 1;
+      }
+
+      .link-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--dark);
+      }
+
+      .link-description {
+        font-size: 0.85rem;
+        color: var(--gray);
+        line-height: 1.4;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 40px 0 20px;
+        color: var(--gray);
+        font-size: 0.85rem;
+      }
+
+      .footer a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: text-decoration 0.2s ease;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Mobile Optimization */
+      @media (max-width: 640px) {
+        .header {
+          padding: 40px 0 30px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .profile-pic {
+          width: 120px;
+          height: 120px;
+        }
+
+        .bio {
+          font-size: 0.95rem;
+        }
+
+        .link-card a {
+          padding: 16px 20px;
+        }
+
+        .link-icon {
+          width: 45px;
+          height: 45px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-pattern"></div>
+    <div class="gradient-orb orb1"></div>
+    <div class="gradient-orb orb2"></div>
+
+    <div class="container">
+      <header class="header">
+        <div class="profile-wrapper">
+          <div class="profile-pic">
+            <img src="my_icon.jpg" alt="Profile" />
+          </div>
+        </div>
+        <h1>長山 健太郎</h1>
+        <div class="tagline">
+          Electric-Railway Engineer & Solutions-Archetect
+        </div>
+        <p class="bio">
+          JR東日本の電気系エンジニア 兼 駆け出しソリューションアーキテクト<br />
+          <span class="bio-highlight">鉄道電気（電車線）</span> /
+          <span class="bio-highlight">AWS</span> /
+          <span class="bio-highlight">生成AI</span> /
+          <span class="bio-highlight">データ分析・ガバナンス</span><br />
+          まだまだわからないことばかりなので日々勉強中です
+        </p>
+      </header>
+
+      <section class="my-card-section">
+        <h2 class="section-title">My Card</h2>
+        <div class="my-card-wrapper">
+          <img src="my-card.jpg" alt="My Card" class="my-card-image" />
+        </div>
+        <div class="copy-text-wrapper">
+          <pre id="copy-text-content" class="copy-text">
+Email: k-nagayama@jreast.co.jp
+Phone: 070-1558-8878</pre
+          >
+          <button class="copy-button" onclick="copyToClipboard()">Copy</button>
+        </div>
+      </section>
+
+      <section class="links-section">
+        <h2 class="section-title">Contact</h2>
+        <div class="links-grid">
+          <!-- Email -->
+          <div class="link-card">
+            <a href="mailto:k-nagayama@jreast.co.jp">
+              <div class="link-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  ></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div class="link-content">
+                <div class="link-title">Email</div>
+                <div class="link-description">k-nagayama@jreast.co.jp</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Phone -->
+          <div class="link-card">
+            <a href="tel:07015588878">
+              <div class="link-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                  ></path>
+                </svg>
+              </div>
+              <div class="link-content">
+                <div class="link-title">Phone</div>
+                <div class="link-description">070-1558-8878</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="links-section">
+        <h2 class="section-title">Links</h2>
+        <div class="links-grid">
+          <!-- Corporate Website -->
+          <div class="link-card">
+            <a
+              href="https://www.jreast.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="link-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"
+                  ></path>
+                  <path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"></path>
+                </svg>
+              </div>
+              <div class="link-content">
+                <div class="link-title">JR東日本HP</div>
+                <div class="link-description">
+                  東日本エリアにおいて鉄道輸送を中心とした事業を展開しています
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- DICe Information -->
+          <div class="link-card">
+            <a
+              href="https://www.jreast.co.jp/press/2023/20230929_ho01.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="link-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <div class="link-content">
+                <div class="link-title">
+                  Digital & Data イノベーションセンター
+                </div>
+                <div class="link-description">
+                  JR東日本における内製開発チームです。
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- LinkedIn Profile -->
+          <div class="link-card">
+            <a
+              href="https://www.linkedin.com/in/clshinji/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="link-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                  ></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </div>
+              <div class="link-content">
+                <div class="link-title">LinkedIn</div>
+                <div class="link-description">
+                  LinkdIn プロフィールはこちらです。ご自由にどうぞ。
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- X (Twitter) -->
+          <div class="link-card">
+            <a
+              href="https://x.com/clshinji"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="link-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+                  ></path>
+                </svg>
+              </div>
+              <div class="link-content">
+                <div class="link-title">X (Twitter) ※個人アカウント</div>
+                <div class="link-description">
+                  個人的に、情報収集や、日々の学びなどを発信しています。<br />当社の活動とは一切関係がありませんので、ご注意ください。
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>
+        参考記事:
+        <a
+          href="https://qiita.com/ryu-ki/items/965d35a5b9abe86d0054"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          【100円でできる！】NFCカード+S3+CloudFrontで始めるデジタル名刺生活
+        </a>
+      </p>
+    </footer>
+
+    <script>
+      // Smooth hover effect for touch devices
+      document.querySelectorAll(".link-card").forEach((element) => {
+        element.addEventListener("touchstart", function () {
+          this.style.transform = "scale(0.98)";
+        });
+        element.addEventListener("touchend", function () {
+          this.style.transform = "";
+        });
+      });
+
+      function copyToClipboard() {
+        const textToCopy =
+          document.getElementById("copy-text-content").innerText;
+        const button = document.querySelector(".copy-button");
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            button.textContent = "Copied!";
+            button.classList.add("copied");
+            setTimeout(() => {
+              button.textContent = "Copy";
+              button.classList.remove("copied");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy text: ", err);
+            button.textContent = "Error";
+          });
+      }
+    </script>
+  </body>
+</html>
